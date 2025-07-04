@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Servicio;
+use App\Exports\ServiciosExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ServicioController extends Controller
 {
@@ -101,5 +103,10 @@ class ServicioController extends Controller
     {
         $servicio->delete();
         return redirect()->route('servicios.index')->with('success', 'Servicio eliminado correctamente');
+    }
+
+    public function export()
+    {
+        return Excel::download(new ServiciosExport, 'servicios.xlsx');
     }
 }

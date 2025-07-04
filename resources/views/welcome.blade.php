@@ -30,7 +30,7 @@
                     <option value="">Selecciona un servicio</option>
                     @foreach($servicios as $servicio)
                         <option value="{{ $servicio->id }}">
-                            {{ ucfirst($servicio->nombre) }} - ${{ number_format($servicio->precio, 2) }} ({{ $servicio->duracion }} min)
+                            {{ $servicio->nombre }} - S/ {{ number_format($servicio->precio, 2) }} ({{ $servicio->duracion }} min)
                         </option>
                     @endforeach
                 </select>

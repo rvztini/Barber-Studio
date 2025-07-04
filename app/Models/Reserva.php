@@ -21,4 +21,9 @@ class Reserva extends Model
     {
         return $this->belongsTo(Servicio::class);
     }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class);
+    }
 }

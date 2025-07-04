@@ -15,6 +15,7 @@
                 <a href="/" class="text-gray-700 hover:text-indigo-600 font-medium transition">Reservar</a>
                 <a href="/reservas" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver reservas</a>
                 <a href="/servicios" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver servicios</a>
+                <a href="/pagos" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver pagos</a>
             </div>
         </div>
     </nav>

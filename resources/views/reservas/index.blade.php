@@ -9,6 +9,10 @@
                 <input type="text" name="q" value="{{ old('q', $query ?? '') }}" placeholder="Buscar por nombre o contacto..." class="w-full max-w-md px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none text-center" />
                 <button type="submit" class="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors duration-200">Buscar</button>
             </form>
+            <a href="{{ route('reservas.export') }}" class="ml-4 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4" /></svg>
+                Exportar Excel
+            </a>
         </div>
         <div class="overflow-x-auto">
             <table class="table-auto w-full border border-gray-200 rounded-lg overflow-hidden">
@@ -34,9 +38,10 @@
                             <td class="p-4 text-center text-sm text-gray-800">{{ $reserva->fecha }}</td>
                             <td class="p-4 text-center text-sm text-gray-800">{{ $reserva->hora }}</td>
                             <td class="p-4 text-center text-sm text-gray-800">{{ $reserva->servicio->nombre ?? '-' }}</td>
-                            <td class="p-4 text-center text-sm text-gray-800">${{ number_format($reserva->servicio->precio ?? 0, 2) }}</td>
+                            <td class="p-4 text-center text-sm text-gray-800">S/ {{ number_format($reserva->servicio->precio ?? 0, 2) }}</td>
                             <td class="p-4 text-center text-sm text-gray-800">{{ $reserva->servicio->duracion ?? '-' }} min</td>
                             <td class="p-4 text-center flex justify-center gap-2">
+                                <a href="{{ route('reservas.show', $reserva->id) }}" class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded transition-colors duration-200 text-xs font-semibold">Ver Pagos</a>
                                 <a href="{{ route('reservas.edit', $reserva->id) }}" class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors duration-200 text-xs font-semibold">Editar</a>
                                 <form action="{{ route('reservas.destroy', $reserva->id) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar esta reserva?');">
                                     @csrf

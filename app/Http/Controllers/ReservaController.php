@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Reserva;
 use App\Models\Servicio;
 use Illuminate\Support\Facades\Toast;
+use App\Exports\ReservasExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReservaController extends Controller
 {
@@ -32,8 +34,7 @@ class ReservaController extends Controller
                 $qB->where('nombre', 'like', "%$query%")
                     ->orWhere('contacto', 'like', "%$query%") ;
             })
-            ->orderBy('fecha', 'desc')
-            ->orderBy('hora', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate(10)
             ->appends(['q' => $query]);
         return view('reservas.index', compact('reservas', 'query'));
@@ -68,5 +69,16 @@ class ReservaController extends Controller
     {
         $reserva->delete();
         return redirect()->route('reservas.index')->with('success', 'Reserva eliminada correctamente');
+    }
+
+    public function export()
+    {
+        return Excel::download(new ReservasExport, 'reservas.xlsx');
+    }
+
+    public function show(Reserva $reserva)
+    {
+        $reserva->load(['servicio', 'pagos']);
+        return view('reservas.show', compact('reserva'));
     }
 }

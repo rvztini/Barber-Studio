@@ -14,7 +14,10 @@
             </div>
             <div>
                 <label for="precio" class="block text-sm font-medium text-gray-700 mb-1">Precio</label>
-                <input type="number" step="0.01" id="precio" name="precio" value="{{ old('precio', $servicio->precio) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                <div class="flex items-center">
+                    <span class="px-2 py-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l-lg text-gray-600">S/</span>
+                    <input type="number" step="0.01" id="precio" name="precio" value="{{ old('precio', $servicio->precio) }}" required class="w-full px-4 py-2 border border-gray-300 rounded-r-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                </div>
                 @error('precio')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
             </div>
             <div>
