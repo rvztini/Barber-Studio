@@ -43,9 +43,12 @@ class PagoController extends Controller
             'estado' => 'required|in:Pendiente,Pagado,Cancelado',
         ]);
 
-        Pago::create($validated);
-
-        return redirect()->route('pagos.index')->with('success', 'Pago registrado correctamente');
+        try {
+            Pago::create($validated);
+            return redirect()->route('pagos.index')->with('success', 'Pago registrado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al registrar el pago. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function edit(Pago $pago)
@@ -64,15 +67,22 @@ class PagoController extends Controller
             'estado' => 'required|in:Pendiente,Pagado,Cancelado',
         ]);
 
-        $pago->update($validated);
-
-        return redirect()->route('pagos.index')->with('success', 'Pago actualizado correctamente');
+        try {
+            $pago->update($validated);
+            return redirect()->route('pagos.index')->with('success', 'Pago actualizado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al actualizar el pago. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function destroy(Pago $pago)
     {
-        $pago->delete();
-        return redirect()->route('pagos.index')->with('success', 'Pago eliminado correctamente');
+        try {
+            $pago->delete();
+            return redirect()->route('pagos.index')->with('success', 'Pago eliminado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al eliminar el pago. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function export()
@@ -95,10 +105,13 @@ class PagoController extends Controller
             'estado' => 'required|in:Pendiente,Pagado,Cancelado',
         ]);
 
-        $validated['reserva_id'] = $reserva->id;
-        Pago::create($validated);
-
-        return redirect()->route('reservas.show', $reserva->id)->with('success', 'Pago registrado correctamente');
+        try {
+            $validated['reserva_id'] = $reserva->id;
+            Pago::create($validated);
+            return redirect()->route('reservas.show', $reserva->id)->with('success', 'Pago registrado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al registrar el pago. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function show(Pago $pago)

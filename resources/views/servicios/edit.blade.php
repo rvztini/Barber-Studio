@@ -32,42 +32,4 @@
         </form>
     </div>
 </div>
-@endsection
-
-@push('scripts')
-@if(session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function showCustomToast() {
-            Toastify({
-                text: @json(session('success')),
-                duration: 6000,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "#111",
-                stopOnFocus: true,
-                style: {
-                    borderRadius: '10px',
-                    fontWeight: 'bold',
-                    fontSize: '1.2rem',
-                    color: '#fff',
-                    boxShadow: '0 4px 24px rgba(0,0,0,0.15)'
-                }
-            }).showToast();
-        }
-        if (window.Toastify) {
-            showCustomToast();
-        } else {
-            let tries = 0;
-            let interval = setInterval(function() {
-                if (window.Toastify) {
-                    showCustomToast();
-                    clearInterval(interval);
-                }
-                if (++tries > 10) clearInterval(interval);
-            }, 200);
-        }
-    });
-</script>
-@endif
-@endpush 
+@endsection 

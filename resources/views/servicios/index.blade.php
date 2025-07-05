@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10">
     <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md p-6">
         <div class="flex justify-between items-center mb-6">
@@ -18,14 +16,14 @@
             <button type="submit" class="ml-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg transition-colors duration-200">Buscar</button>
         </form>
         <div class="overflow-x-auto">
-            <table class="table-auto w-full border border-gray-200 rounded-lg overflow-hidden">
+            <table class="min-w-full bg-white rounded-lg shadow-md">
                 <thead>
-                    <tr class="bg-gray-200">
-                        <th class="p-4 text-center text-xs font-semibold text-gray-700">#</th>
-                        <th class="p-4 text-center text-xs font-semibold text-gray-700">Nombre</th>
-                        <th class="p-4 text-center text-xs font-semibold text-gray-700">Precio</th>
-                        <th class="p-4 text-center text-xs font-semibold text-gray-700">Duración</th>
-                        <th class="p-4 text-center text-xs font-semibold text-gray-700">Acciones</th>
+                    <tr>
+                        <th class="p-4 text-center text-xs font-semibold text-gray-500 uppercase">#</th>
+                        <th class="p-4 text-center text-xs font-semibold text-gray-500 uppercase">Nombre</th>
+                        <th class="p-4 text-center text-xs font-semibold text-gray-500 uppercase">Precio</th>
+                        <th class="p-4 text-center text-xs font-semibold text-gray-500 uppercase">Duración</th>
+                        <th class="p-4 text-center text-xs font-semibold text-gray-500 uppercase">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,42 +60,4 @@
         </div>
     </div>
 </div>
-@endsection
-
-@push('scripts')
-@if(session('success'))
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function showCustomToast() {
-            Toastify({
-                text: @json(session('success')),
-                duration: 6000,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "#111",
-                stopOnFocus: true,
-                style: {
-                    borderRadius: '10px',
-                    fontWeight: 'bold',
-                    fontSize: '1.2rem',
-                    color: '#fff',
-                    boxShadow: '0 4px 24px rgba(0,0,0,0.15)'
-                }
-            }).showToast();
-        }
-        if (window.Toastify) {
-            showCustomToast();
-        } else {
-            let tries = 0;
-            let interval = setInterval(function() {
-                if (window.Toastify) {
-                    showCustomToast();
-                    clearInterval(interval);
-                }
-                if (++tries > 10) clearInterval(interval);
-            }, 200);
-        }
-    });
-</script>
-@endif
-@endpush 
+</x-app-layout> 

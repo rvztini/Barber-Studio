@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('monto', 8, 2);
             $table->enum('metodo_pago', ['Yape', 'Plin', 'Efectivo', 'Tarjeta']);
             $table->date('fecha_pago');
-            $table->enum('estado', ['Pagado', 'Pendiente'])->default('Pagado');
+            $table->enum('estado', ['Pagado', 'Pendiente', 'Cancelado'])->default('Pagado');
             $table->timestamps();
         });
     }

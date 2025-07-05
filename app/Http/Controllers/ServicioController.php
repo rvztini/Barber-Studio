@@ -49,8 +49,13 @@ class ServicioController extends Controller
             'precio' => 'required|numeric|min:0',
             'duracion' => 'required|integer|min:1',
         ]);
-        Servicio::create($validated);
-        return redirect()->route('servicios.index')->with('success', 'Servicio creado correctamente');
+        
+        try {
+            Servicio::create($validated);
+            return redirect()->route('servicios.index')->with('success', 'Servicio creado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al crear el servicio. Por favor, inténtalo de nuevo.');
+        }
     }
 
     /**
@@ -89,8 +94,13 @@ class ServicioController extends Controller
             'precio' => 'required|numeric|min:0',
             'duracion' => 'required|integer|min:1',
         ]);
-        $servicio->update($validated);
-        return redirect()->route('servicios.index')->with('success', 'Servicio actualizado correctamente');
+        
+        try {
+            $servicio->update($validated);
+            return redirect()->route('servicios.index')->with('success', 'Servicio actualizado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al actualizar el servicio. Por favor, inténtalo de nuevo.');
+        }
     }
 
     /**
@@ -101,8 +111,12 @@ class ServicioController extends Controller
      */
     public function destroy(Servicio $servicio)
     {
-        $servicio->delete();
-        return redirect()->route('servicios.index')->with('success', 'Servicio eliminado correctamente');
+        try {
+            $servicio->delete();
+            return redirect()->route('servicios.index')->with('success', 'Servicio eliminado correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al eliminar el servicio. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function export()

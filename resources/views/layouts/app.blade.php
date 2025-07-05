@@ -1,25 +1,84 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Barber Studio')</title>
-    @vite('resources/css/app.css')
-    @vite('resources/js/app.js')
-</head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen antialiased">
-    <nav class="bg-white shadow mb-8">
-        <div class="max-w-5xl mx-auto px-4 py-4 flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold text-indigo-700">Barber Studio</a>
-            <div class="space-x-4">
-                <a href="/" class="text-gray-700 hover:text-indigo-600 font-medium transition">Reservar</a>
-                <a href="/reservas" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver reservas</a>
-                <a href="/servicios" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver servicios</a>
-                <a href="/pagos" class="text-gray-700 hover:text-indigo-600 font-medium transition">Ver pagos</a>
-            </div>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+        <!-- Toastify CSS -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+        <!-- Toastify JS -->
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
+            @include('layouts.navigation')
+
+            <!-- Page Heading -->
+            @if (isset($header))
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
+            @endif
+
+            <!-- Page Content -->
+            <main>
+                {{ $slot }}
+            </main>
         </div>
-    </nav>
-    @yield('content')
-    @stack('scripts')
-</body>
-</html> 
+
+        <!-- Script para mostrar alertas -->
+        <script>
+            // Función para mostrar alertas con Toastify
+            function showAlert(message, type = 'success') {
+                Toastify({
+                    text: message,
+                    duration: 5000,
+                    gravity: "top",
+                    position: "center",
+                    backgroundColor: "#111",
+                    stopOnFocus: true,
+                    close: true,
+                    style: {
+                        borderRadius: '10px',
+                        fontWeight: 'bold',
+                        fontSize: '1.2rem',
+                        color: '#fff',
+                        boxShadow: '0 4px 24px rgba(0,0,0,0.15)',
+                        marginTop: '60px',
+                        zIndex: 9999
+                    }
+                }).showToast();
+            }
+
+            // Mostrar alertas de sesión si existen
+            @if(session('success'))
+                showAlert("{{ session('success') }}", 'success');
+            @endif
+
+            @if(session('error'))
+                showAlert("{{ session('error') }}", 'error');
+            @endif
+
+            @if(session('warning'))
+                showAlert("{{ session('warning') }}", 'warning');
+            @endif
+
+            @if(session('info'))
+                showAlert("{{ session('info') }}", 'info');
+            @endif
+        </script>
+    </body>
+</html>

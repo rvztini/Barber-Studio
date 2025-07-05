@@ -11,21 +11,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReservaController extends Controller
 {
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nombre' => 'required|string|max:255',
-            'contacto' => 'required|string|max:255',
-            'fecha' => 'required|date',
-            'hora' => 'required',
-            'servicio_id' => 'required|exists:servicios,id',
-        ]);
-
-        Reserva::create($validated);
-
-        return redirect()->back()->with('success', 'Tu reserva fue registrada correctamente');
-    }
-
     public function index(Request $request)
     {
         $query = $request->input('q');
@@ -40,10 +25,34 @@ class ReservaController extends Controller
         return view('reservas.index', compact('reservas', 'query'));
     }
 
-    public function showForm()
+    public function create()
     {
-        $servicios = Servicio::all();
-        return view('welcome', compact('servicios'));
+        $servicios = \App\Models\Servicio::all();
+        return view('reservas.create', compact('servicios'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'nombre' => 'required|string|max:255',
+            'contacto' => 'required|string|max:255',
+            'fecha' => 'required|date',
+            'hora' => 'required',
+            'servicio_id' => 'required|exists:servicios,id',
+        ]);
+
+        try {
+            Reserva::create($validated);
+            return redirect()->route('reservas.create')->with('success', '¡Reserva registrada con éxito!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al registrar la reserva. Por favor, inténtalo de nuevo.');
+        }
+    }
+
+    public function show(Reserva $reserva)
+    {
+        $reserva->load(['servicio', 'pagos']);
+        return view('reservas.show', compact('reserva'));
     }
 
     public function edit(Reserva $reserva)
@@ -61,24 +70,27 @@ class ReservaController extends Controller
             'hora' => 'required',
             'servicio_id' => 'required|exists:servicios,id',
         ]);
-        $reserva->update($validated);
-        return redirect()->route('reservas.index')->with('success', 'Reserva actualizada correctamente');
+        
+        try {
+            $reserva->update($validated);
+            return redirect()->route('reservas.index')->with('success', 'Reserva actualizada correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al actualizar la reserva. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function destroy(Reserva $reserva)
     {
-        $reserva->delete();
-        return redirect()->route('reservas.index')->with('success', 'Reserva eliminada correctamente');
+        try {
+            $reserva->delete();
+            return redirect()->route('reservas.index')->with('success', 'Reserva eliminada correctamente');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error al eliminar la reserva. Por favor, inténtalo de nuevo.');
+        }
     }
 
     public function export()
     {
         return Excel::download(new ReservasExport, 'reservas.xlsx');
-    }
-
-    public function show(Reserva $reserva)
-    {
-        $reserva->load(['servicio', 'pagos']);
-        return view('reservas.show', compact('reserva'));
     }
 }

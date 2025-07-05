@@ -1,9 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReservaController;
-use App\Http\Controllers\ServicioController;
-use App\Http\Controllers\PagoController;
+use App\Models\Servicio;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,32 +10,39 @@ use App\Http\Controllers\PagoController;
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
 |
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    $servicios = Servicio::all();
+    return view('welcome', compact('servicios'));
 });
 
-Route::get('/', [ReservaController::class, 'showForm'])->name('reservar.form');
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
-Route::post('/reservar', [ReservaController::class, 'store'])->name('reservar.store');
-Route::get('/reservas', [ReservaController::class, 'index'])->name('reservas.index');
-Route::get('/reservas/{reserva}', [ReservaController::class, 'show'])->name('reservas.show');
-Route::get('/reservas/{reserva}/edit', [ReservaController::class, 'edit'])->name('reservas.edit');
-Route::put('/reservas/{reserva}', [ReservaController::class, 'update'])->name('reservas.update');
-Route::delete('/reservas/{reserva}', [ReservaController::class, 'destroy'])->name('reservas.destroy');
-Route::get('/reservas/export', [ReservaController::class, 'export'])->name('reservas.export');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-Route::resource('servicios', ServicioController::class);
-Route::get('/servicios/export', [ServicioController::class, 'export'])->name('servicios.export');
+    // CRUD Servicios
+    Route::resource('servicios', App\Http\Controllers\ServicioController::class);
+    Route::get('servicios-export', [App\Http\Controllers\ServicioController::class, 'export'])->name('servicios.export');
 
-// Rutas para pagos
-Route::get('/pagos/export', [PagoController::class, 'export'])->name('pagos.export');
-Route::resource('pagos', PagoController::class);
+    // CRUD Reservas
+    Route::resource('reservas', App\Http\Controllers\ReservaController::class);
+    Route::get('reservas-export', [App\Http\Controllers\ReservaController::class, 'export'])->name('reservas.export');
+    // Pagos anidados en reservas
+    Route::get('reservas/{reserva}/pagos/create', [App\Http\Controllers\PagoController::class, 'createForReserva'])->name('reservas.pagos.create');
+    Route::post('reservas/{reserva}/pagos', [App\Http\Controllers\PagoController::class, 'storeForReserva'])->name('reservas.pagos.store');
 
-// Rutas anidadas para pagos de reservas específicas
-Route::get('/reservas/{reserva}/pagos/create', [PagoController::class, 'createForReserva'])->name('reservas.pagos.create');
-Route::post('/reservas/{reserva}/pagos', [PagoController::class, 'storeForReserva'])->name('reservas.pagos.store');
+    // CRUD Pagos
+    Route::resource('pagos', App\Http\Controllers\PagoController::class);
+    Route::get('pagos-export', [App\Http\Controllers\PagoController::class, 'export'])->name('pagos.export');
+});
+
+require __DIR__.'/auth.php';
