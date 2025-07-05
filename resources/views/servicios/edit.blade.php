@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<x-app-layout>
 <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-10">
     <div class="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
         <h1 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Editar servicio</h1>
@@ -32,4 +30,4 @@
         </form>
     </div>
 </div>
-@endsection 
+</x-app-layout> 

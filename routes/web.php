@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
     // CRUD Pagos
     Route::resource('pagos', App\Http\Controllers\PagoController::class);
     Route::get('pagos-export', [App\Http\Controllers\PagoController::class, 'export'])->name('pagos.export');
+
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__.'/auth.php';

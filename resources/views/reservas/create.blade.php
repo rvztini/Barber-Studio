@@ -22,7 +22,30 @@
                 </div>
                 <div class="w-full md:w-1/2">
                     <label for="hora" class="block text-sm font-medium text-gray-700 mb-1">Hora</label>
-                    <input type="time" id="hora" name="hora" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none" value="{{ old('hora') }}">
+                    <select id="hora" name="hora" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none">
+                        <option value="">--:--</option>
+                        @php
+                            $horasManana = [10, 11, 12];
+                            $horasTarde = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+                            $minutos = ["00", "15", "30", "45"];
+                        @endphp
+                        @foreach($horasManana as $h)
+                            @foreach($minutos as $m)
+                                @if($h == 12 && in_array($m, ["30", "45"]))
+                                    @continue
+                                @endif
+                                <option value="{{ sprintf('%02d:%s:00', $h, $m) }}" @if(old('hora') == sprintf('%02d:%s:00', $h, $m)) selected @endif>{{ sprintf('%02d:%s', $h, $m) }}</option>
+                            @endforeach
+                        @endforeach
+                        @foreach($horasTarde as $h)
+                            @foreach($minutos as $m)
+                                @if($h == 13 && in_array($m, ["00", "15"]))
+                                    @continue
+                                @endif
+                                <option value="{{ sprintf('%02d:%s:00', $h, $m) }}" @if(old('hora') == sprintf('%02d:%s:00', $h, $m)) selected @endif>{{ sprintf('%02d:%s', $h, $m) }}</option>
+                            @endforeach
+                        @endforeach
+                    </select>
                     @error('hora')<span class="text-red-500 text-xs">{{ $message }}</span>@enderror
                 </div>
             </div>
